@@ -10,6 +10,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@openzeppelin/contracts-upgradeable": "^5.4.0",
     "hardhat": "^2.26.1"
   },
   "devDependencies": {
