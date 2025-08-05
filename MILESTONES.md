@@ -1,12 +1,35 @@
-### Commit: 738ab60 - 7cb6523: Set floor (create contracts) for registering assets
+**Note:** Read from buttom upwards
+
+## MilestoneId
+**Commits:**
+
+**Goal:**
+
+**About:**
+
+**Tasks:**
+
+## Milestone1
+**Commits:** 7cb6523 - toCommit
+
+**Goal:**
+To be able to register an asset and get its IP ID.
+
+**About:**
+
+**Tasks:**
+
+## Milestone0
+**Commits**: 738ab60 - 7cb6523
+
+**Goal:**
+Set floor (or create contracts) for registering assets
+
 **About:**
 - Starting point is `IPAssetRegistry` because it is the entry point for registering assets.
 - The `IPAssetRegistry` (and all registries) are UUPS upgradeable and have proxy storage struct for the registry variables.
 - The registration of an asset is the creation of an ERC-6551 (Token Bound Account) account for it. This is done through `IPAccountRegistry`.
 - Each account has a storage contract (will be implemented later)
-
-**Goal:**
-Set floor (create contracts) for registering assets
 
 **Tasks:**
 - Create `IIPAccountRegistry` for creating token bound account for an asset
@@ -20,7 +43,7 @@ Set floor (create contracts) for registering assets
   - fee destination (treasury) address
   - fee token address
 - Create the struct fields getter functions
-- Create the struct fields setter function (Q: Why did they use one function for that?)
+- Create the struct fields setter function (*Q: Why did they use one function for that?*)
   - Is it because they won't be used frequently so one is enough plus it will reduce:
     - deployment cost?
     - functions lookup cost?
