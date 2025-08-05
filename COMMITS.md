@@ -1,6 +1,6 @@
 ### Commit: #5 Set floor (create contracts) for registering assets
 **About:**
-- Starting point is `IPAssetRegistry` because it the entry point for registering assets.
+- Starting point is `IPAssetRegistry` because it is the entry point for registering assets.
 - The `IPAssetRegistry` (and all registries) are UUPS upgradeable and have proxy storage struct for the registry variables.
 - The registration of an asset is the creation of an ERC-6551 (Token Bound Account) account for it. This is done through `IPAccountRegistry`.
 - Each account has a storage contract (will be implemented later)
@@ -20,3 +20,8 @@ Set floor (create contracts) for registering assets
   - fee destination (treasury) address
   - fee token address
 - Create the struct fields getter functions
+- Create the struct fields setter function (Q: Why did they use one function for that?)
+  - Is it because they won't be used frequently so one is enough plus it will reduce:
+    - deployment cost?
+    - functions lookup cost?
+  - For clarity?
