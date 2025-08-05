@@ -1,4 +1,4 @@
-### Commit: #5 Set floor (create contracts) for registering assets
+### Commit: 738ab60 - 7cb6523: Set floor (create contracts) for registering assets
 **About:**
 - Starting point is `IPAssetRegistry` because it is the entry point for registering assets.
 - The `IPAssetRegistry` (and all registries) are UUPS upgradeable and have proxy storage struct for the registry variables.
