@@ -5,6 +5,7 @@ import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/U
 import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
 import {IIPAssetRegistry} from "../interfaces/registries/IIPAssetRegistry.sol";
+import {Errors} from "../lib/Errors.sol";
 
 contract IPAssetRegistry is IIPAssetRegistry, OwnableUpgradeable, UUPSUpgradeable {
     /// @custom:storage-location erc7201:story-protocol-clone.IPAssetRegistry
@@ -23,15 +24,23 @@ contract IPAssetRegistry is IIPAssetRegistry, OwnableUpgradeable, UUPSUpgradeabl
         __Ownable_init(_owner);
     }
 
-    // Must be overridden to include access restriction to the upgrade mechanism
-    // TODO: Temporary version. Will be replaced with access manager later.
-    function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
+    function setRegistrationFee(address treasury, address feeToken, uint96 feeAmount) public onlyOwner {
+        if (feeAmount > 0) {
+            if (treasury == address(0)) revert Errors.IPAssetRegistry__ZeroAddress("treasury");
+            if (feeToken == address(0)) revert Errors.IPAssetRegistry__ZeroAddress("feeToken");
+        }
+        
+        IPAssetRegistryStorage storage $ = _getIPAssetRegistryStorage();
+        $.treasury = treasury;
+        $.feeToken = feeToken;
+        $.feeAmount = feeAmount;
+    }
 
     function totalSupply() external view returns (uint256) {
         return _getIPAssetRegistryStorage().totalSupply;
     }
 
-    function getFee() external view returns (uint96) {
+    function getFeeAmount() external view returns (uint96) {
         return _getIPAssetRegistryStorage().feeAmount;
     }
 
@@ -48,4 +57,9 @@ contract IPAssetRegistry is IIPAssetRegistry, OwnableUpgradeable, UUPSUpgradeabl
             $.slot := IPAssetRegistryStorageLocation
         }
     }
+
+    // Must be overridden to include access restriction to the upgrade mechanism
+    // TODO: Temporary version. Will be replaced with access manager later.
+    function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
+
 }

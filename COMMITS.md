@@ -25,3 +25,4 @@ Set floor (create contracts) for registering assets
     - deployment cost?
     - functions lookup cost?
   - For clarity?
+- Add all public/external functions to the corresponding interface.
