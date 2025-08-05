@@ -19,3 +19,4 @@ Set floor (create contracts) for registering assets
   - registration fee
   - fee destination (treasury) address
   - fee token address
+- Create the struct fields getter functions

@@ -19,11 +19,33 @@ contract IPAssetRegistry is IIPAssetRegistry, OwnableUpgradeable, UUPSUpgradeabl
     // keccak256(abi.encode(uint256(keccak256("story-protocol-clone.IPAssetRegistry")) - 1)) & ~bytes32(uint256(0xff));
     bytes32 private constant IPAssetRegistryStorageLocation = 0x09dfb5fccc754b3771dfd48d9355aaf026c07703881852d08df8238c9fc22600;
 
-    function initialize(address owner) external initializer {
-        __Ownable_init(owner);
+    function initialize(address _owner) external initializer {
+        __Ownable_init(_owner);
     }
 
     // Must be overridden to include access restriction to the upgrade mechanism
     // TODO: Temporary version. Will be replaced with access manager later.
     function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
+
+    function totalSupply() external view returns (uint256) {
+        return _getIPAssetRegistryStorage().totalSupply;
+    }
+
+    function getFee() external view returns (uint96) {
+        return _getIPAssetRegistryStorage().feeAmount;
+    }
+
+    function getFeeToken() external view returns (address) {
+        return _getIPAssetRegistryStorage().feeToken;
+    }
+
+    function getTreasury() external view returns (address) {
+        return _getIPAssetRegistryStorage().treasury;
+    }
+
+    function _getIPAssetRegistryStorage() private pure returns (IPAssetRegistryStorage storage $) {
+        assembly {
+            $.slot := IPAssetRegistryStorageLocation
+        }
+    }
 }
