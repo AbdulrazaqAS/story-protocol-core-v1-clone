@@ -21,7 +21,8 @@ contract IPAssetRegistry is IIPAssetRegistry, OwnableUpgradeable, UUPSUpgradeabl
     bytes32 private constant IPAssetRegistryStorageLocation = 0x09dfb5fccc754b3771dfd48d9355aaf026c07703881852d08df8238c9fc22600;
 
     function initialize(address _owner) external initializer {
-        __Ownable_init(_owner);
+        __Ownable_init(_owner);  // Temporarily used before updating to access manager
+        __UUPSUpgradeable_init();
     }
 
     function setRegistrationFee(address treasury, address feeToken, uint96 feeAmount) public onlyOwner {
