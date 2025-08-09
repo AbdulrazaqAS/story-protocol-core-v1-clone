@@ -67,7 +67,7 @@ Create `IPAccountStorage` used by token bound accounts as their storage.
   - Implement all the functions from `IIPAccountStorage`.
 
 **Side Effects:**
-- Created `IIPModuleRegistry` and add `isRegistered` function signature which is used in `IPAccountStorage` to detect registered modules.
+- Created `IModuleRegistry` and add `isRegistered` function signature which is used in `IPAccountStorage` to detect registered modules.
 
 **Fixes:**
 - Forgot to call `__UUPSUpgradeable_init` in `IPAssetRegistry` initializer.
