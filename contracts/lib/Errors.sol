@@ -6,7 +6,9 @@ library Errors {
     error IPAssetRegistry__ZeroAddress(string name);
 
     /////////////// IP Account Storage ///////////////
-    error IPAccountStorage__NonRegisteredModule(address module);  // Check
-    error IPAccountStorage__KeysValuesLengthMismatch();  // Check
-    error IPAccountStorage__ZeroAddress(string name);  // Check
+    error IPAccountStorage__NotRegisteredModule(address module);
+    error IPAccountStorage__InvalidBatchLengths();
+    error IPAccountStorage__ZeroIpAssetRegistry();
+    error IPAccountStorage__ZeroModuleRegistry();
+    error IPAccountStorage__ZeroLicenseRegistry();
 }

@@ -62,7 +62,6 @@ Create `IPAccountStorage` used by token bound accounts as their storage.
 - Create `IPAccountStorage`.
   - Inherits `IIPAccountStorage`
   - Inherits `ERC165` for `IERC165` function implementation. It overrides the only one function in it.
-    - *Q: Why `supportsInterface` function overrides both ERC165 and IERC165. Shouldn't it only override ERC165 as interface functions are meant to be implemented/overrided?*
   - Create immutable vars for storing the addresses of the registries.
   - Create `onlyRegisteredModule` modifier for detecting only registered modules and allowed registries.
   - Implement all the functions from `IIPAccountStorage`.
