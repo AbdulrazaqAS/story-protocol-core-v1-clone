@@ -9,12 +9,22 @@
 
 ## MilestoneId
 **Commits:**
+*Range of commits regarding this milestone*
 
 **Goal:**
+*Goal to be achieved in the milstone*
 
 **Background:**
+*Some info/rationale regarding the milestone*
 
 **Tasks:**
+*Task to be done to achieve the goal*
+
+**Side Effects:**
+*Tasks done but not in listed in the tasks of the milestone. Done just to **Currently** achieve listed tasks. Like creating an interface with a single function because it is currently needed*
+
+**Fixes:**
+*Fixes made to previous commits*
 
 ## Milestone1
 **Commits:** 7cb6523 - ...
@@ -44,6 +54,7 @@ Create `IPAccountStorage` used by token bound accounts as their storage.
 - The storage is not upgradeable. The generality of the storage makes it not needed to be upgradeable. With the generic functions and the namespaced storage, many modules and contracts can be given space for writing data.
 - *Q: The contract uses `using ShortStrings for *;`, Where is it used?*
   - Seems like it's not used. Just commented and the project still compiles.
+- *Q: Shouldn't it also have `getBytesBatch` function that reads a batch from a single namespace?*
 
 **Tasks:**
 - Create `IIPAccountStorage`. And write all the functions signatures.
@@ -55,6 +66,9 @@ Create `IPAccountStorage` used by token bound accounts as their storage.
   - Create immutable vars for storing the addresses of the registries.
   - Create `onlyRegisteredModule` modifier for detecting only registered modules and allowed registries.
   - Implement all the functions from `IIPAccountStorage`.
+
+**Side Effects:**
+- Created `IIPModuleRegistry` and add `isRegistered` function signature which is used in `IPAccountStorage` to detect registered modules.
 
 **Fixes:**
 - Forgot to call `__UUPSUpgradeable_init` in `IPAssetRegistry` initializer.
