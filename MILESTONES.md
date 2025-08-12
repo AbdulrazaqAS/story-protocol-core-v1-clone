@@ -39,13 +39,18 @@ Create `IIPAccount` which serves as `ERC6551Account` interface which all ERC6551
 - `ERC6551Registry` requires an `ERC6551Account` implementation address to create the account.
 - The `ERC6551Account` implementation (named `IPAccountImpl`) used by Story Protocol is an extended one.
 - The account implementation used by Story Protocol inherits the following:
-  - `IIPAccount`: Serves as `ERC6551Account` interface which all ERC6551 account implementations must inherit.
-  - `ERC6551`: Solady's `ERC6551Account` implementation. This provides the implementation of methods from `IIPAccount`.
+  - `ERC6551`: Solady's `ERC6551Account` implementation. This provides the implementation of methods from `IIPAccount`
   - `IPAccountStorage`: This serves as data storage of the `IPAccountImpl`. (Done at #ML1)
+  - `IIPAccount`: Serves as interface which provides some of the functions signatures which each `ERC6551Account` must implement.
+    - Only has the following functions among those specified in ERC6551 (`IERC6551Executable` and `IERC6551Account`): `receive`, `token`, `isValidSigner`.
+      - It has `execute` but doesn't have the `operation` parameter.
+      - It has `state` but returns `bytes32` instead of `uint256`.
+    - *Q#4: Why not just inherit from `IERC6551Executable` and `IERC6551Account`?*
+    - Even though `IPAccountImpl` inherits Solady's `ERC6551` which provides all the required ERC6551 functions, but it's `state` function return type too is `bytes32` not `uint256`. Did I miss something?
 - `IIPAccount` inherits from `IIPAccountStorage` as each account implementation will have a storage. As the account implementation will inherit from `IPAccountStorage`, that will provide the implementation of the functions.
 
 **Tasks:**
-- Create `IIPAccount`. Then copy and paste the `ERC6551Account` interface functions signatures from the EIP's web page.
+- Create `IIPAccount`.
   - Inherits `IIPAccountStorage`.
 
 
@@ -62,7 +67,7 @@ Create `IPAccountStorage` used by token bound accounts as their storage.
 - `ERC6551Registry` requires an `ERC6551Account` implementation address to create the account.
 - The `ERC6551Account` implementation (named `IPAccountImpl`) used by Story Protocol is an extended one. It has a dedicated storage contract.
 - The account implementation used by Story Protocol inherits the following:
-  - `IIPAccount`: Serves as `ERC6551Account` interface which all ERC6551 account implementations must inherit.
+  - `IIPAccount`: Serves as interface which provides some of the functions signatures which each `ERC6551Account` must implement.
   - `ERC6551`: Solady's `ERC6551Account` implementation. This provides the implementation of methods from `IIPAccount`.
   - `IPAccountStorage`: This serves as data storage of the `IPAccountImpl`.
 - `IPAccountStorage` is a namespaced storage. As there are different modules and registries in the protocol, each one has a dedicated space (hence namespaced) for storing data relevant to it in the storage. Some:
@@ -70,14 +75,14 @@ Create `IPAccountStorage` used by token bound accounts as their storage.
   - Dispute Module: Stores data regarding disputes.
   - Asset Registry: Stores data regarding registration.
   - ...
-  - *Q: It uses the module registry for allowing registered modules to write data but hardcoded the registries address as immutables. What if there is need to add another registry given that the storage is not upgradeable?*
+  - *Q#3: It uses the module registry for allowing registered modules to write data but hardcoded the registries address as immutables. What if there is need to add another registry given that the storage is not upgradeable?*
     - Can the new registry be registered by the module registry to be given access to the storage?
     - Will they just create another module for to handle writing data of new registries to the storage?
 - The storage uses functions like `setBytes`, `setBytesBatch`, `setBytes32`, and `getBytes` for writing and retrieving data. The functions are generic as any form of data can be represented as bytes. This makes the storage highly extensible whereby a contract or library can be used to create specific function from these generic ones. Like `IPAccountStorageOps` library (coming later) which has more specific functions.
 - The storage is not upgradeable. The generality of the storage makes it not needed to be upgradeable. With the generic functions and the namespaced storage, many modules and contracts can be given space for writing data.
-- *Q: The contract uses `using ShortStrings for *;`, Where is it used?*
+- *Q#2: The contract uses `using ShortStrings for *;`, Where is it used?*
   - Seems like it's not used. Just commented and the project still compiles.
-- *Q: Shouldn't it also have `getBytesBatch` function that reads a batch from a single namespace?*
+- *Q#1: Shouldn't it also have `getBytesBatch` function that reads a batch from a single namespace?*
 
 **Tasks:**
 - Create `IIPAccountStorage`. And write all the functions signatures.
@@ -119,7 +124,7 @@ Set floor (or create contracts) for registering IPs
   - fee destination (treasury) address
   - fee token address
 - Create the struct fields getter functions
-- Create the struct fields setter function (*Q: Why did they use one function for that?*)
+- Create the struct fields setter function (*Q#0: Why did they use one function for that?*)
   - Is it because they won't be used frequently so one is enough plus it will reduce:
     - deployment cost?
     - functions lookup cost?
