@@ -31,10 +31,10 @@
 **Commits:** ac46ac0 - ...
 
 **Goal:**
-Create `IIPAccount` which serves as `ERC6551Account` interface which all ERC6551 account implementations must inherit from.
+Create `IIPAccount` which serves as interface which provides some of the functions signatures which each `ERC6551Account` must implement.
 
 **Background:**
-- I'm trying to create `IPAccountRegistry` to create a token bound account for the IP's NFT.
+- I'm trying to create `IPAccountRegistry` to create a token bound account for IP's NFT.
 - `IPAccountRegistry` uses `ERC6551Registry` to create a token bound account.
 - `ERC6551Registry` requires an `ERC6551Account` implementation address to create the account.
 - The `ERC6551Account` implementation (named `IPAccountImpl`) used by Story Protocol is an extended one.
@@ -46,7 +46,9 @@ Create `IIPAccount` which serves as `ERC6551Account` interface which all ERC6551
       - It has `execute` but doesn't have the `operation` parameter.
       - It has `state` but returns `bytes32` instead of `uint256`.
     - *Q#4: Why not just inherit from `IERC6551Executable` and `IERC6551Account`?*
-    - Even though `IPAccountImpl` inherits Solady's `ERC6551` which provides all the required ERC6551 functions, but it's `state` function return type too is `bytes32` not `uint256`. Did I miss something?
+    - Even though `IPAccountImpl` inherits Solady's `ERC6551` which provides all the required ERC6551 functions, but it's `state` function return type too is `bytes32` not `uint256`.
+      - *Q#6: Why are they both returning `bytes34` and not `uint256`? Did I miss something?*
+    - *Q#5: Why `IPAccountImpl` has two functions for updating state: `updateStateForValidSigner` and `_updateStateForExecute`? For execute is intuitive, but for valid signer is not.*
 - `IIPAccount` inherits from `IIPAccountStorage` as each account implementation will have a storage. As the account implementation will inherit from `IPAccountStorage`, that will provide the implementation of the functions.
 
 **Tasks:**
