@@ -27,8 +27,30 @@
 *Fixes made to previous commits*
 
 
+## Milestone3
+**Commits:** 2209f49 - ...
+
+**Goal:**
+Create `IPAccountImpl` which will be used by `IPAccountRegistry` to create token bound accounts. `IPAccountImpl` is a little much, so it will be broken into multiple milestones. Phase0: Just create the file, inherit from parents, and write all the functions without bodies.
+
+**Background:**
+- I'm trying to create `IPAccountRegistry` to create a token bound account for IP's NFT.
+- `IPAccountRegistry` uses `ERC6551Registry` to create a token bound account.
+- `ERC6551Registry` requires an `ERC6551Account` implementation address to create the account.
+- The `ERC6551Account` implementation (named `IPAccountImpl`) used by Story Protocol is an extended one.
+- The account implementation used by Story Protocol inherits the following:
+  - `ERC6551`: Solady's `ERC6551Account` implementation. This provides the implementation of methods from `IIPAccount`
+  - `IPAccountStorage`: This serves as data storage of the `IPAccountImpl`. (Done at #ML1)
+  - `IIPAccount`: Serves as interface which provides some of the functions signatures which each `ERC6551Account` must implement. (Done at #ML2)
+
+**Tasks:**
+- Create `IPAccountImpl`.
+  - Inherits: Solady's `ERC6551`, `IPAccountStorage`, and `IIPAccount`.
+- Implement all the functions as empty functions.
+
+
 ## Milestone2
-**Commits:** ac46ac0 - ...
+**Commits:** ac46ac0 - 2209f49
 
 **Goal:**
 Create `IIPAccount` which serves as interface which provides some of the functions signatures which each `ERC6551Account` must implement.
