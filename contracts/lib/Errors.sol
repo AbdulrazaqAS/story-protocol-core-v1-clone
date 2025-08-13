@@ -11,4 +11,7 @@ library Errors {
     error IPAccountStorage__ZeroIpAssetRegistry();
     error IPAccountStorage__ZeroModuleRegistry();
     error IPAccountStorage__ZeroLicenseRegistry();
+
+    /////////////// IP Account (Implementation) ///////////////
+    error IPAccount__ZeroAccessController();
 }

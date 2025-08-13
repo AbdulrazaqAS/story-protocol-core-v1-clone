@@ -42,11 +42,22 @@ Create `IPAccountImpl` which will be used by `IPAccountRegistry` to create token
   - `ERC6551`: Solady's `ERC6551Account` implementation. This provides the implementation of methods from `IIPAccount`
   - `IPAccountStorage`: This serves as data storage of the `IPAccountImpl`. (Done at #ML1)
   - `IIPAccount`: Serves as interface which provides some of the functions signatures which each `ERC6551Account` must implement. (Done at #ML2)
+- `IPAccountImpl` uses `AccessController` for managing permissions. Who and who can execute actions on/from this account.(`AccessController` is coming later)
 
 **Tasks:**
 - Create `IPAccountImpl`.
   - Inherits: Solady's `ERC6551`, `IPAccountStorage`, and `IIPAccount`.
-- Implement all the functions as empty functions.
+  - constructor params:
+    - Address of accessController. Has a public immutable for storing it.
+    - Addresses of: ipAssetRegistry, licenseRegistry, moduleRegistry. These will be passed to `IPAccountStorage`
+- `npm install solady erc6551`: erc6551 to be used in `supportsInterface` function.
+  - *Q#7: Why doesn't the function include support for IIPAccountStorage?*
+- Write all the functions as empty functions.
+  - Has two `execute`. One from Solady's ERC6551, the other from `IIPAccount`.
+  - *Q#8: Why is `executeBatch` not in any interface?*
+
+**Fixes:**
+- Modified **#ML0** and **#ML1** details.
 
 
 ## Milestone2
@@ -65,7 +76,7 @@ Create `IIPAccount` which serves as interface which provides some of the functio
   - `IPAccountStorage`: This serves as data storage of the `IPAccountImpl`. (Done at #ML1)
   - `IIPAccount`: Serves as interface which provides some of the functions signatures which each `ERC6551Account` must implement.
     - Only has the following functions among those specified in ERC6551 (`IERC6551Executable` and `IERC6551Account`): `receive`, `token`, `isValidSigner`.
-      - It has `execute` but doesn't have the `operation` parameter.
+      - It has `execute` but doesn't have the `operation` parameter. Original one is provided to `IPAccountImpl` by Solady's ERC6551.
       - It has `state` but returns `bytes32` instead of `uint256`.
     - *Q#4: Why not just inherit from `IERC6551Executable` and `IERC6551Account`?*
     - Even though `IPAccountImpl` inherits Solady's `ERC6551` which provides all the required ERC6551 functions, but it's `state` function return type too is `bytes32` not `uint256`.
@@ -114,7 +125,9 @@ Create `IPAccountStorage` used by token bound accounts as their storage.
 - Create `IPAccountStorage`.
   - Inherits `IIPAccountStorage`
   - Inherits `ERC165` for `IERC165` function implementation. It overrides the only one function in it.
-  - Create immutable vars for storing the addresses of the registries.
+  - Constructor params:
+    - Address of the three registries: ipAssetRegistry, licenseRegistry, moduleRegistry.
+  - Create immutable vars for storing the address of the registries.
   - Create `onlyRegisteredModule` modifier for detecting only registered modules and allowed registries.
   - Implement all the functions from `IIPAccountStorage`.
 
@@ -128,13 +141,13 @@ Create `IPAccountStorage` used by token bound accounts as their storage.
 **Commits**: 738ab60 - 7cb6523
 
 **Goal:**
-Set floor (or create contracts) for registering IPs
+Create `IPAssetRegistry`. Create its proxy storage struct. Write the most independent functions, others will come later.
 
 **Background:**
 - Starting point is `IPAssetRegistry` because it is the entry point for registering IPs.
 - The `IPAssetRegistry` (and all registries) are UUPS upgradeable and have proxy storage struct for the registry variables.
 - The registration of an IP is the creation of an ERC-6551 (Token Bound Account) account for the NFT representing it. This is done through `IPAccountRegistry`.
-- Each account has a storage contract (will be implemented later)
+- Each account has an (`IPAccountStorage`) storage contract (will be implemented later).
 
 **Tasks:**
 - Create `IIPAccountRegistry` for creating token bound account for an IP
