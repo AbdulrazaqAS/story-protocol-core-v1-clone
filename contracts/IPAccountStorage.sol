@@ -16,7 +16,9 @@ contract IPAccountStorage is IIPAccountStorage, ERC165 {
     mapping(bytes32 => mapping(bytes32 => bytes32)) public bytes32Data;
 
     modifier onlyRegisteredModule() {
-        if (  // PO: Module/registry that will use the storage more frequently should be first to be checked in the circuit
+        // PO: Module/registry that will use the storage more frequently should
+        // be first to be checked in the circuit
+        if (
             msg.sender != IP_ASSET_REGISTRY &&
             msg.sender != LICENSE_REGISTRY &&
             !IModuleRegistry(MODULE_REGISTRY).isRegistered(msg.sender)
@@ -26,13 +28,13 @@ contract IPAccountStorage is IIPAccountStorage, ERC165 {
         _;
     }
 
-    constructor(address ipAssetRegistry, address ipLicenseRegistry, address ipModuleRegistry) {
+    constructor(address ipAssetRegistry, address licenseRegistry, address moduleRegistry) {
         if (ipAssetRegistry == address(0)) revert Errors.IPAccountStorage__ZeroIpAssetRegistry();
-        if (ipLicenseRegistry == address(0)) revert Errors.IPAccountStorage__ZeroLicenseRegistry();
-        if (ipModuleRegistry == address(0)) revert Errors.IPAccountStorage__ZeroModuleRegistry();
+        if (licenseRegistry == address(0)) revert Errors.IPAccountStorage__ZeroLicenseRegistry();
+        if (moduleRegistry == address(0)) revert Errors.IPAccountStorage__ZeroModuleRegistry();
         IP_ASSET_REGISTRY = ipAssetRegistry;
-        LICENSE_REGISTRY = ipLicenseRegistry;
-        MODULE_REGISTRY = ipModuleRegistry;
+        LICENSE_REGISTRY = licenseRegistry;
+        MODULE_REGISTRY = moduleRegistry;
     }
 
     function setBytes(bytes32 key, bytes calldata value) public onlyRegisteredModule {
@@ -55,7 +57,10 @@ contract IPAccountStorage is IIPAccountStorage, ERC165 {
         }
     }
 
-    function getBytesBatch(bytes32[] calldata namespaces, bytes32[] calldata keys) public view returns (bytes[] memory values) {
+    function getBytesBatch(
+        bytes32[] calldata namespaces,
+        bytes32[] calldata keys
+    ) public view returns (bytes[] memory values) {
         if (namespaces.length != keys.length) revert Errors.IPAccountStorage__InvalidBatchLengths();
         values = new bytes[](keys.length);
         for (uint256 i=0; i < keys.length; i++) {  // PO#0
@@ -83,7 +88,10 @@ contract IPAccountStorage is IIPAccountStorage, ERC165 {
         }
     }
 
-    function getBytes32Batch(bytes32[] calldata namespaces, bytes32[] calldata keys) public view returns (bytes32[] memory values) {
+    function getBytes32Batch(
+        bytes32[] calldata namespaces,
+        bytes32[] calldata keys
+    ) public view returns (bytes32[] memory values) {
         if (namespaces.length != keys.length) revert Errors.IPAccountStorage__InvalidBatchLengths();
         values = new bytes32[](keys.length);
         for (uint256 i=0; i < keys.length; i++) {  // PO#0
