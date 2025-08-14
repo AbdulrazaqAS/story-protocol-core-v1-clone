@@ -66,7 +66,7 @@ contract IPAccountImpl is ERC6551, IPAccountStorage, IIPAccount {
             (to, callData) = abi.decode(data, (address, bytes));
         }
         // If data length is 0, target(to) will address(0) and callData will be empty("")
-        if (this.isValidSigner(signer, to, callData)) {  // Note: Coming up (why making a self external call)
+        if (this.isValidSigner(signer, to, callData)) {  // See Note#1 (why making a self external call)
             result = IIPAccount.isValidSigner.selector;
         }
     }
