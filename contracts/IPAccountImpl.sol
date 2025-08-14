@@ -11,6 +11,7 @@ import {IERC6551Executable} from "erc6551/interfaces/IERC6551Executable.sol";
 
 import {IPAccountStorage} from "./IPAccountStorage.sol";
 import {IIPAccount} from "./interfaces/IIPAccount.sol";
+import {IAccessController} from "./interfaces/access/IAccessController.sol";
 import {Errors} from "./lib/Errors.sol";
 
 contract IPAccountImpl is ERC6551, IPAccountStorage, IIPAccount {
@@ -48,10 +49,45 @@ contract IPAccountImpl is ERC6551, IPAccountStorage, IIPAccount {
         );
     }
 
+    // Owner would be able to validate himself even with empty data. In that case
+    // address(0) and then an empty data will be used. Inside AccessController,
+    // if the owner is the signer, it doesn't check the data it just
+    // returns (without an error, same as true)
     function isValidSigner(
         address signer,
         bytes calldata data
-    ) public view override(ERC6551, IIPAccount) returns (bytes4) {}
+    ) public view override(ERC6551, IIPAccount) returns (bytes4 result) {
+        address to = address(0);
+        bytes memory callData = "";
+        // If data is >0 then it must also be >= 32 . Meaning it must contains
+        // at least the target(to) (then the data will be empty)
+        if (data.length > 0){
+            if (data.length < 32) revert Errors.IPAccount__InvalidCalldata();
+            (to, callData) = abi.decode(data, (address, bytes));
+        }
+        // If data length is 0, target(to) will address(0) and callData will be empty("")
+        if (this.isValidSigner(signer, to, callData)) {  // Note: Coming up (why making a self external call)
+            result = IIPAccount.isValidSigner.selector;
+        }
+    }
+
+    // Read the other isValidSigner
+    function isValidSigner(
+        address signer,
+        address to,
+        bytes calldata data
+    ) public view returns (bool) {
+        // If data is >0 then it must also be >= 4 . Meaning it must be
+        // targtting a func (by having the 4 bytes selector)
+        if (data.length > 0 && data.length < 4)
+            revert Errors.IPAccount__InvalidCalldata();
+
+        bytes4 selector = bytes4(0);
+        if (data.length >= 4) selector = bytes4(data[:4]);
+        // the check will revert if permission is denied
+        IAccessController(ACCESS_CONTROLLER).checkPermission(address(this), signer, to, selector);
+        return true;
+    }
 
     function state() public view override(ERC6551, IIPAccount) returns (bytes32) {}
 

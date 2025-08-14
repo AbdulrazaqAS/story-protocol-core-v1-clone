@@ -20,15 +20,38 @@
 **Tasks:**
 *Task to be done to achieve the goal*
 
-**Side Effects:**
-*Tasks done but not in listed in the tasks of the milestone. Done just to **Currently** achieve listed tasks. Like creating an interface with a single function because it is currently needed*
-
 **Fixes:**
 *Fixes made to previous commits*
 
 
+## Milestone4
+**Commits:** 0561d66 - ...
+
+**Goal:**
+Create `IPAccountImpl` (Phase1): Implement the `isValidSigner` functions.
+
+**Background:**
+- I'm trying to create `IPAccountRegistry` to create a token bound account for IP's NFT.
+- `IPAccountRegistry` uses `ERC6551Registry` to create a token bound account.
+- `ERC6551Registry` requires an `ERC6551Account` implementation address to create the account.
+- The `ERC6551Account` implementation (named `IPAccountImpl`) used by Story Protocol is an extended one.
+- The account implementation used by Story Protocol inherits from `ERC6551`, `IPAccountStorage`, and `IIPAccount`. It also uses `AccessController` for managing permissions.
+
+**Tasks:**
+- Create `IAccessController` which will be used for checking valid signers.
+  - Add `checkPermission` function signature.
+- Implement `isValidSigner` functions.
+  - Has two `isValidSigner`. The ERC6551 specification one, and another one (not in any interface).
+    - *Q#9: Why is `isValidSigner` not in any interface?*
+    - One (ERC6551 one) take `signer, context`, the other takes `signer, to, data`. (`context is also named as data in the code)
+      - First one is converted to `signer, to, data` and forwarded to the second one.
+
+**Fixes:**
+- Removed **Side Effects** from Milestone Details.
+
+
 ## Milestone3
-**Commits:** 2209f49 - ...
+**Commits:** 2209f49 - 0561d66
 
 **Goal:**
 Create `IPAccountImpl` which will be used by `IPAccountRegistry` to create token bound accounts. `IPAccountImpl` is a little much, so it will be broken into multiple milestones. Phase0: Just create the file, inherit from parents, and write all the functions without bodies.
@@ -110,6 +133,7 @@ Create `IPAccountStorage` used by token bound accounts as their storage.
   - Dispute Module: Stores data regarding disputes.
   - Asset Registry: Stores data regarding registration.
   - ...
+  - It is `IModuleRegistry` to check whether a calling module is registered.
   - *Q#3: It uses the module registry for allowing registered modules to write data but hardcoded the registries address as immutables. What if there is need to add another registry given that the storage is not upgradeable?*
     - Can the new registry be registered by the module registry to be given access to the storage?
     - Will they just create another module for to handle writing data of new registries to the storage?
@@ -128,11 +152,9 @@ Create `IPAccountStorage` used by token bound accounts as their storage.
   - Constructor params:
     - Address of the three registries: ipAssetRegistry, licenseRegistry, moduleRegistry.
   - Create immutable vars for storing the address of the registries.
+  - Create `IModuleRegistry` and add `isRegistered` function signature which will be used to check whether a module is registered.
   - Create `onlyRegisteredModule` modifier for detecting only registered modules and allowed registries.
   - Implement all the functions from `IIPAccountStorage`.
-
-**Side Effects:**
-- Created `IModuleRegistry` and add `isRegistered` function signature which is used in `IPAccountStorage` to detect registered modules.
 
 **Fixes:**
 - Forgot to call `__UUPSUpgradeable_init` in `IPAssetRegistry` initializer.

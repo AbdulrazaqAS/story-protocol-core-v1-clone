@@ -14,4 +14,5 @@ library Errors {
 
     /////////////// IP Account (Implementation) ///////////////
     error IPAccount__ZeroAccessController();
+    error IPAccount__InvalidCalldata();
 }
