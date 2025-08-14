@@ -52,7 +52,7 @@ contract IPAccountStorage is IIPAccountStorage, ERC165 {
     function setBytesBatch(bytes32[] calldata keys, bytes[] calldata values) public onlyRegisteredModule {
         if (keys.length != values.length) revert Errors.IPAccountStorage__InvalidBatchLengths();
         bytes32 namespace = _toBytes32(msg.sender);  // Optimized: namespace cached
-        for (uint256 i=0; i < keys.length; i++) {  // PO#0
+        for (uint256 i=0; i < keys.length; i++) {  // Note#0
             bytesData[namespace][keys[i]] = values[i];
         }
     }
@@ -63,7 +63,7 @@ contract IPAccountStorage is IIPAccountStorage, ERC165 {
     ) public view returns (bytes[] memory values) {
         if (namespaces.length != keys.length) revert Errors.IPAccountStorage__InvalidBatchLengths();
         values = new bytes[](keys.length);
-        for (uint256 i=0; i < keys.length; i++) {  // PO#0
+        for (uint256 i=0; i < keys.length; i++) {  // Note#0
             values[i] = bytesData[namespaces[i]][keys[i]];
         }
     }
@@ -83,7 +83,7 @@ contract IPAccountStorage is IIPAccountStorage, ERC165 {
     function setBytes32Batch(bytes32[] calldata keys, bytes32[] calldata values) public onlyRegisteredModule {
         if (keys.length != values.length) revert Errors.IPAccountStorage__InvalidBatchLengths();
         bytes32 namespace = _toBytes32(msg.sender);  // Optimized: namespace cached
-        for (uint256 i=0; i < keys.length; i++) {  // PO#0
+        for (uint256 i=0; i < keys.length; i++) {  // Note#0
             bytes32Data[namespace][keys[i]] = values[i];
         }
     }
@@ -94,7 +94,7 @@ contract IPAccountStorage is IIPAccountStorage, ERC165 {
     ) public view returns (bytes32[] memory values) {
         if (namespaces.length != keys.length) revert Errors.IPAccountStorage__InvalidBatchLengths();
         values = new bytes32[](keys.length);
-        for (uint256 i=0; i < keys.length; i++) {  // PO#0
+        for (uint256 i=0; i < keys.length; i++) {  // Note#0
             values[i] = bytes32Data[namespaces[i]][keys[i]];
         }
     }
