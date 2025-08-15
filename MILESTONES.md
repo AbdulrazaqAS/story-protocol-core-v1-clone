@@ -24,8 +24,27 @@
 *Fixes made to previous commits*
 
 
+## Milestone5
+**Commits:** 92999c1 - ...
+
+**Goal:**
+Create `IPAccountImpl` (Phase2): Implement the `execute` functions.
+
+**Background:**
+- I'm trying to create `IPAccountRegistry` to create a token bound account for IP's NFT.
+- `IPAccountRegistry` uses `ERC6551Registry` to create a token bound account.
+- `ERC6551Registry` requires an `ERC6551Account` implementation address to create the account.
+- The `ERC6551Account` implementation (named `IPAccountImpl`) used by Story Protocol is an extended one.
+- The account implementation used by Story Protocol inherits from `ERC6551`, `IPAccountStorage`, and `IIPAccount`. It also uses `AccessController` for managing permissions.
+
+**Tasks:**
+- Implement the two `execute` functions. The both take `to, value, data` and the signer is `msg.sender`
+  - The ERC6551 one has an additional `operation` param to specify the operation type. Only `call` is supported currently.
+  - *Q#10: Are they payable so that the value specified in the function can be sent to the account in that same tx?*
+
+
 ## Milestone4
-**Commits:** 0561d66 - ...
+**Commits:** 0561d66 - 92999c1
 
 **Goal:**
 Create `IPAccountImpl` (Phase1): Implement the `isValidSigner` functions.
@@ -42,7 +61,7 @@ Create `IPAccountImpl` (Phase1): Implement the `isValidSigner` functions.
   - Add `checkPermission` function signature.
 - Implement `isValidSigner` functions.
   - Has two `isValidSigner`. The ERC6551 specification one, and another one (not in any interface).
-    - *Q#9: Why is `isValidSigner` not in any interface?*
+    - *Q#9: Why is the `isValidSigner` not in any interface?*
     - One (ERC6551 one) take `signer, context`, the other takes `signer, to, data`. (`context is also named as data in the code)
       - First one is converted to `signer, to, data` and forwarded to the second one.
 
