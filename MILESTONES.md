@@ -42,6 +42,8 @@ Create `IPAccountImpl` (Phase2): Implement the `execute` functions.
   - The ERC6551 one has an additional `operation` param to specify the operation type. Only `call` is supported currently.
   - *Q#10: Are they payable so that the value specified in the function can be sent to the account in that same tx?*
 
+**Fixes:**
+- Changed mutability of `IPAccountImpl._domainNameAndVersion()` to view as Story Protocol did it.
 
 ## Milestone4
 **Commits:** 0561d66 - 92999c1

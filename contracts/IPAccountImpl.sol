@@ -89,7 +89,9 @@ contract IPAccountImpl is ERC6551, IPAccountStorage, IIPAccount {
         return true;
     }
 
-    function state() public view override(ERC6551, IIPAccount) returns (bytes32) {}
+    function state() public view override(ERC6551, IIPAccount) returns (bytes32) {
+        return super.state();
+    }
 
     function execute(address to, uint256 value, bytes calldata data) external payable returns (bytes memory) {}
 
@@ -103,7 +105,7 @@ contract IPAccountImpl is ERC6551, IPAccountStorage, IIPAccount {
     ) external payable returns (bytes memory) {}
 
     // Override function from Solady's erc712: erc6551 => erc1271 => EIP712
-    function _domainNameAndVersion() internal pure override returns (string memory name, string memory version) {
+    function _domainNameAndVersion() internal view override returns (string memory name, string memory version) {
         name = "Story Protocol Clone IP Account";
         version = "1";
     }
@@ -111,4 +113,15 @@ contract IPAccountImpl is ERC6551, IPAccountStorage, IIPAccount {
     function updateStateForValidSigner(address signer, address to, bytes calldata data) external onlyRegisteredModule {}
 
     receive() external payable override(Receiver, IIPAccount) {}
+
+    // Updates state after each execution/tx from this account
+    function _updateStateForExecute(address to, uint256 value, bytes calldata data) private {
+        bytes32 newState = keccak256(abi.encode(
+            state(), abi.encodeWithSignature("execute(address,uint256,bytes)", to, value, data)
+        ));
+
+        assembly {
+            sstore(_ERC6551_STATE_SLOT, newState)
+        }
+    }
 }
